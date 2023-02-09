@@ -12,7 +12,7 @@
   "activationEvents": [
     "calvacljstestbed.helloWorld"
   ],
-  "main": "./out/extension.js",
+  "main": "./lib/main.js",
   "contributes": {
     "commands": [
       {
@@ -23,12 +23,12 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "npm run compile-cljs && npm run compile-ts",
-    "watch": "tsc -watch -p ./",
+    "compile-cljs": "npx shadow-cljs compile :calva-lib",
+    "watch-ts": "npx tsc --watch --project ./tsconfig.json",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
-    "clean": "rimraf ./out && rimraf ./tsconfig.tsbuildinfo && rimraf ./cljs-out"
+    "clean": "rimraf ./out && rimraf ./tsconfig.tsbuildinfo && rimraf ./cljs-out && rimraf ./lib"
   },
   "devDependencies": {
     "@types/vscode": "^1.67.0",

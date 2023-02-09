@@ -1,0 +1,5 @@
+{:deps {}
+ :paths ["src/cljs-lib/src"
+         "src/cljs-lib/test"
+         "src"
+         "out"]}
