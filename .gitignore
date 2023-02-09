@@ -11,3 +11,4 @@ tsconfig.tsbuildinfo
 .shadow-cljs
 lib
 .calva/output-window
+.lsp/.cache
