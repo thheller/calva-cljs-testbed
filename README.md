@@ -1,4 +1,4 @@
-# calvacljstestbed README
+# Calva CLJS Testbed
 
 This repo serves as a testbed for getting Calva into a state in which the extension is built with shadow-cljs, so that hot reloading of the TypeScript works and so that we can start porting the extension to ClojureScript incrementally.
 
