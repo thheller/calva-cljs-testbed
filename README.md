@@ -27,6 +27,6 @@ The extension entrypoint is `src/calva_cljs/extension.cljs`, but doesn't yet try
 1. Run `npm install`.
 2. Run `npm run compile-cljs`. This must be done before running the `watch-ts` script since the TypeScript needs to be able to import the compiled CLJS from `src/cljs-lib/src/calva`.
 3. Run `npm run watch-ts`. This must be done before started the shadow-cljs watch process so that the compiled TypeScript files are on the classpath and can be imported by the CLJS code in `src/calva_cljs`.
-4. Jack-in and choose shadow-cljs and the extension build (or copy the jack-in commmand, run it, and connect to the shadow-cljs repl).
+4. Jack-in and choose shadow-cljs and the `extension` and `calva-lib` builds (or copy the jack-in commmand, run it, and connect to the shadow-cljs repl).
 5. Hit `F5` to start the extension in a new VS Code window.
 6. Run the "Hello World" command from the command palette if you want to check that the extension is working, and also if you want to connect to the extension build's repl, as this command activates the extension.
