@@ -77,7 +77,7 @@ Namespace imports (goog:some.Namespace) cannot use import * as. Did you mean to 
 
 If then set `moduleResolution` to `node16`, TS compilation succeeds, but the shadow-cljs compiler errors above still occur. [This Slack convo about the above error](https://clojurians.slack.com/archives/C6N245JGG/p1612767381070600) points toward using es2015 (es6) module output as the solution.
 
-I then set `module` in `tsconfig.json` to `es6`, I still get the same errors from shadow-cljs, but if I change the imports in `./out/foo.js` manually from:
+If I then set `module` in `tsconfig.json` to `es6`, I still get the same errors from shadow-cljs, but if I change the imports in `./out/foo.js` manually from:
 
 ```javascript
 import * as vscode from "vscode";
