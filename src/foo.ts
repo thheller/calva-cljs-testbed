@@ -1,5 +1,5 @@
-import * as vscode from "vscode";
-import * as os from "os";
+import vscode from "vscode";
+import os from "os";
 //import * as cljsLib from "../out/cljs-lib/out/cljs-lib.js";
 
 export function hello() {

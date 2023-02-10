@@ -1,7 +1,11 @@
 (ns calva-cljs.extension
   (:require ["vscode" :as vscode :refer [window]]
-            #_["/foo.js" :as foo]
+            ["/foo.js" :as foo]
             #_["/utilities" :as util]))
+
+(comment
+  (.. foo (hello))
+  :rcf)
 
 (defonce current-context (atom nil))
 (defonce disposables (atom []))
