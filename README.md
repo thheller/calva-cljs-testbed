@@ -13,9 +13,9 @@ This branch should be left as-is, and efforts to set up Calva for being built by
 
 The readme in each branch that represents an approach should describe issues that arose and how they were resolved so that we can track decisions and assumptions.
 
-## Where This Branch Leaves Off
+## Where The `main` Branch Leaves Off
 
-The extension entrypoint is `src/calva_cljs/extension.cljs`, but doesn't yet try to input compiled TypeScript.
+The extension entrypoint is `src/calva_cljs/extension.cljs`, but doesn't yet try to import and call compiled TypeScript.
 
 ## The End Goal
 
@@ -30,3 +30,4 @@ The extension entrypoint is `src/calva_cljs/extension.cljs`, but doesn't yet try
 4. Jack-in and choose shadow-cljs and the `extension` and `calva-lib` builds (or copy the jack-in commmand, run it, and connect to the shadow-cljs repl).
 5. Hit `F5` to start the extension in a new VS Code window.
 6. Run the "Hello World" command from the command palette if you want to check that the extension is working, and also if you want to connect to the extension build's repl, as this command activates the extension.
+
