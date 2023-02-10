@@ -36,12 +36,12 @@
   [^js context]
   (reset! current-context context)
   (register-command! "calvacljstestbed.helloWorld" say-hello)
-  (prn "Calva activated"))
+  (prn "Calva CLJS Testbed activated"))
 
 (defn deactivate
   []
   (dispose-all! @disposables)
-  (prn "Calva deactivated"))
+  (prn "Calva CLJS Testbed deactivated"))
 
 (defn before-load-async [done]
   (deactivate)
@@ -49,5 +49,5 @@
 
 (defn after-load []
   (activate @current-context)
-  (prn "Calva reloaded"))
+  (prn "Calva CLJS Testbed reloaded"))
 
