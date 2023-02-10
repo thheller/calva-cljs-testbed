@@ -3,13 +3,6 @@
             #_["/foo.js" :as foo]
             #_["/utilities" :as util]))
 
-(comment
-  (.. foo (callSomeFunctionFromBar))
-  (.. foo (hello))
-  (.. foo (platform))
-  (.. foo (showMessage "hello worlddddd"))
-  :rcf)
-
 (defonce current-context (atom nil))
 (defonce disposables (atom []))
 
