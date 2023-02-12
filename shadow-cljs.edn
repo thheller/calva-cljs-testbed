@@ -2,7 +2,7 @@
  :builds       {:calva-lib
                 {:target    :node-library
                  :exports   {:testFunction calva.foo/test-function}
-                 :output-to "out/cljs-lib/cljs-lib.js"}
+                 :output-to "src/cljs-lib/out/cljs-lib.js"}
                 :extension
                 {:target :node-library
                  :js-options {:js-provider :shadow

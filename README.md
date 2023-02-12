@@ -57,7 +57,7 @@ Trying to evaluate a call to any of those functions from `foo` throws an error, 
 ; module$foo.hello is not a function
 ```
 
-If I then remove the `moduleResolution` setting and set `module` to `es6`, I get the following error from the TS compiler:
+If we then remove the `moduleResolution` setting and set `module` to `es6`, we get the following error from the TS compiler:
 
 ```text
 src/test/runTest.ts:3:26 - error TS2792: Cannot find module '@vscode/test-electron'. Did you mean to set the 'moduleResolution' option to 'node', or to add aliases to the 'paths' option?
@@ -65,7 +65,7 @@ src/test/runTest.ts:3:26 - error TS2792: Cannot find module '@vscode/test-electr
 3 import { runTests } from '@vscode/test-electron';
 ```
 
-And I also get these errors from the shadow-cljs compiler:
+And we also get these errors from the shadow-cljs compiler:
 
 ```text
 Closure compilation failed with 2 errors
@@ -77,7 +77,7 @@ Namespace imports (goog:some.Namespace) cannot use import * as. Did you mean to 
 
 If then set `moduleResolution` to `node16`, TS compilation succeeds, but the shadow-cljs compiler errors above still occur. [This Slack convo about the above error](https://clojurians.slack.com/archives/C6N245JGG/p1612767381070600) points toward using es2015 (es6) module output as the solution.
 
-If I then set `module` in `tsconfig.json` to `es6`, I still get the same errors from shadow-cljs, but if I change the imports in `./out/foo.js` manually from:
+If we then set `module` in `tsconfig.json` to `es6`, we still get the same errors from shadow-cljs, but if we change the imports in `./out/foo.js` manually from:
 
 ```javascript
 import * as vscode from "vscode";
@@ -91,7 +91,7 @@ import vscode from "vscode";
 import os from "os";
 ```
 
-then the shadow-cljs compilation succeeds, and after loading the `extension.clj` file in the repl and evaluating `foo`, I now get:
+then the shadow-cljs compilation succeeds, and after loading the `extension.clj` file in the repl and evaluating `foo`, we now get:
 
 ```clojure
 #js
@@ -117,3 +117,126 @@ src/foo.ts:2:8 - error TS1192: Module '"os"' has no default export.
 
 In the tsconfig docs, the [`allowSyntheticDefaultImports`](https://www.typescriptlang.org/tsconfig#allowSyntheticDefaultImports) setting looks like it might be the solution. Setting this to `true` in `tsconfig.json` results in both the TS and CLJS compilation succeeding, and evaluating `(.. foo (hello))` in the repl succeeds.
 
+---
+
+Now it's time to try importing the cljs-lib code in `foo.ts` and calling a function from it.
+
+We add the following import to `foo.ts`:
+
+```typescript
+import * as cljsLib from "../out/cljs-lib/cljs-lib";
+```
+
+and the compilation for both TS and CLJS succeeds, but shadow-cljs reports the following warning:
+
+```text
+------ WARNING #1 -  -----------------------------------------------------------
+ Resource: 
+ Failed to resolve sourcemap at foo.js.map: foo.js.map
+--------------------------------------------------------------------------------
+```
+
+If we set `inlineSourceMap` to `true` in `tsconfig.json`, the warning goes away.
+
+Now let's try to call a function from the cljs-lib code. We add the following to `foo.ts`:
+
+```typescript
+export function cljsLibTestFunction() {
+  return cljsLib.testFunction("World");
+}
+```
+
+Now we get the following error from the shadow-cljs watch process:
+
+```text
+Cannot access "../out/cljs-lib/cljs-lib" from "foo.js".
+Access outside the classpath is not allowed for relative requires.
+```
+
+It seems that the `..`, to shadow-cljs, means going up outside the classpath. Nodejs wants relative file path imports, but shadow-cljs wants classpath imports.
+
+Maybe if we make the cljs-lib code a nodejs module, we can import it from node_modules instead of using a relative file path. We run `npm init` in the `src/cljs-lib` directory to create a `package.json` file and set it's `main` property to `"out/cljs-lib.js"`. resulting in the following file contents:
+
+```json
+{
+  "name": "cljs-lib",
+  "version": "1.0.0",
+  "description": "",
+  "main": "out/cljs-lib.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
+```
+
+Next we run `npm install ./src/cljs-lib` in the top level directory to install the cljs-lib code as a nodejs module in Calva. This adds the following entry to Calva's dependencies in `package.json`:
+
+```json
+"cljs-lib": "file:src/cljs-lib"
+```
+
+We then change the `:output-to` value for the `:calva-cljs` build in `shadow-cljs.edn` to `"src/cljs-lib/out/cljs-lib.js"`, and then run `npm run compile-cljs`.
+
+Now, back in `foo.ts`, we change the import to:
+
+```typescript
+import * as cljsLib from "cljs-lib";
+```
+
+We then get the following info and exception from the shadow-cljs compiler:
+
+```text
+[2023-02-11 19:48:41.611 - INFO] :shadow.build.npm/js-invalid-requires - {:resource-name "node_modules/cljs-lib/out/cljs-lib.js", :requires [{:line 899, :column 6}]}
+[:extension] Build failure:
+no output for id: [:shadow.build.classpath/resource "foo.js"]
+{:resource-id [:shadow.build.classpath/resource "foo.js"]}
+ExceptionInfo: no output for id: [:shadow.build.classpath/resource "foo.js"]
+        shadow.build.data/get-output! (data.clj:202)
+        shadow.build.data/get-output! (data.clj:198)
+        shadow.build.warnings/get-source-excerpts-for-rc (warnings.clj:50)
+        shadow.build.warnings/get-source-excerpts-for-rc (warnings.clj:47)
+        shadow.build.warnings/get-source-excerpt-for-rc (warnings.clj:55)
+        shadow.build.warnings/get-source-excerpt-for-rc (warnings.clj:54)
+        shadow.build.closure/js-error-xf/fn--13477 (closure.clj:620)
+        ...
+```
+
+If we comment out the `cljsLibTestFunction` function in `foo.ts`, the cljs compilation succeeds:
+
+```typescript
+// export function cljsLibTestFunction() {
+//   return cljsLib.testFunction("World");
+// }
+```
+
+So it seems there's something about the compiled cljs-lib code that shadow-cljs doesn't like.
+
+If we change the import statement in `foo.ts` to:
+
+```typescript
+import cljsLib from 'cljs-lib';
+```
+
+then the shadow-cljs build fails with the following errors:
+
+```text
+Closure compilation failed with 3 errors
+--- node_modules/cljs-lib/out/cljs-lib.js:299
+Closure primitive methods (goog.provide, goog.require, goog.define, etc) must be called at file scope.
+--- node_modules/cljs-lib/out/cljs-lib.js:300
+Closure primitive methods (goog.provide, goog.require, goog.define, etc) must be called at file scope.
+--- node_modules/cljs-lib/out/cljs-lib.js:301
+Closure primitive methods (goog.provide, goog.require, goog.define, etc) must be called at file scope.
+```
+
+Looking at `node_modules/cljs-lib/out/cljs-lib.js`, we see at line 299:
+
+```javascript
+goog.forwardDeclare("XMLHttpRequest");
+```
+
+All the code in that file is wrapped in a function that is immediately invoked, so it seems that the `goog.forwardDeclare` call is not at file scope, but that probably isn't the real problem here.
+
+If shadow-cljs is building the cljs-lib code, then it should be able to later compile the TS code that imports it, so maybe there's something we need to change with the way shadow-cljs builds the cljs-lib code, or there's something we need to change in the `:extension` build in `shadow-cljs.edn`.
