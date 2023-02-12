@@ -33,6 +33,8 @@ The extension entrypoint is `src/calva_cljs/extension.cljs`, but doesn't yet try
 
 ## `attempt_1` Issues and Solutions
 
+### Importing Compiled `foo.ts` in the :extension Build CLJS
+
 When requiring `/foo.js` using `["/foo.js" :as foo]` and loading the file in the repl, evaluating `foo` throws an error:
   
 ```clojure
@@ -117,7 +119,7 @@ src/foo.ts:2:8 - error TS1192: Module '"os"' has no default export.
 
 In the tsconfig docs, the [`allowSyntheticDefaultImports`](https://www.typescriptlang.org/tsconfig#allowSyntheticDefaultImports) setting looks like it might be the solution. Setting this to `true` in `tsconfig.json` results in both the TS and CLJS compilation succeeding, and evaluating `(.. foo (hello))` in the repl succeeds.
 
----
+### Importing the cljs-lib Code in `foo.ts`
 
 Now it's time to try importing the cljs-lib code in `foo.ts` and calling a function from it.
 
@@ -239,4 +241,4 @@ goog.forwardDeclare("XMLHttpRequest");
 
 All the code in that file is wrapped in a function that is immediately invoked, so it seems that the `goog.forwardDeclare` call is not at file scope, but that probably isn't the real problem here.
 
-If shadow-cljs is building the cljs-lib code, then it should be able to later compile the TS code that imports it, so maybe there's something we need to change with the way shadow-cljs builds the cljs-lib code, or there's something we need to change in the `:extension` build in `shadow-cljs.edn`.
+If shadow-cljs is building the cljs-lib code, then it should be able to later compile the TS code that imports it, so maybe there's something we need to change with the way shadow-cljs builds the cljs-lib code, or there's something we need to change in the `:extension` build in `shadow-cljs.edn` to make shadow-cljs bypass compiling the cljs-lib code, which seems like a redundant step anyway.
