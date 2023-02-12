@@ -1,4 +1,12 @@
-# Calva CLJS Testbed
+# Calva CLJS Testbed <!-- omit in toc -->
+
+- [Where The `main` Branch Leaves Off](#where-the-main-branch-leaves-off)
+- [The End Goal](#the-end-goal)
+- [Running the Extension](#running-the-extension)
+- [`attempt_1` Issues and Solutions](#attempt_1-issues-and-solutions)
+  - [Importing Compiled `foo.ts` in the :extension Build CLJS](#importing-compiled-foots-in-the-extension-build-cljs)
+  - [Importing the cljs-lib Code in `foo.ts`](#importing-the-cljs-lib-code-in-foots)
+
 
 This repo serves as a testbed for getting Calva into a state in which the extension is built with shadow-cljs, so that hot reloading of the TypeScript works and so that we can start porting the extension to ClojureScript incrementally.
 
