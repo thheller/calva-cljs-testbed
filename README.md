@@ -6,6 +6,7 @@
 - [`attempt_1` Issues and Solutions](#attempt_1-issues-and-solutions)
   - [Importing Compiled `foo.ts` in the :extension Build CLJS](#importing-compiled-foots-in-the-extension-build-cljs)
   - [Importing the cljs-lib Code in `foo.ts`](#importing-the-cljs-lib-code-in-foots)
+- [Using the :npm-module Target for the calva-lib Build](#using-the-npm-module-target-for-the-calva-lib-build)
 
 
 This repo serves as a testbed for getting Calva into a state in which the extension is built with shadow-cljs, so that hot reloading of the TypeScript works and so that we can start porting the extension to ClojureScript incrementally.
@@ -253,3 +254,45 @@ If shadow-cljs is building the cljs-lib code, then it should be able to later co
 
 At this point, let's upgrade the shadow-cljs version to `^2.20.20` and see if that helps... Nope, same error. Let's keep it at this currently latest version, though.
 
+## Using the :npm-module Target for the calva-lib Build
+
+If we set the `:calva-lib` build config to the following:
+
+```edn
+                {:target    :npm-module
+                 :entries [calva.foo]
+                 :output-dir "node_modules/shadow-cljs"}
+```
+
+then change the import in `foo.ts` to:
+
+```typescript
+import cljsLib from "shadow-cljs/calva.foo";
+```
+
+then the `:calva-lib` compilation and the TS compilation both succeed, but when we try to compile the `:extension` build, we get the following error:
+
+```text
+[2023-02-14 14:01:37.418 - INFO] :shadow.build.npm/js-invalid-requires - {:resource-name "node_modules/shadow-cljs/cljs_env.js", :requires [{:line 792, :column 6}]}
+[:extension] Build failure:
+Closure compilation failed with 109 errors
+--- node_modules/shadow-cljs/cljs.core.js:15
+Required namespace "goog.math.Long" never defined.
+--- node_modules/shadow-cljs/cljs.core.js:16
+Required namespace "goog.object" never defined.
+... (many more errors like the above)
+```
+
+If we remove `:js-provider :shadow` from the `:extension` build, then the `:extension` build succeeds, but when we run the extension host and run the "Hello World" command to activate the extension, we get the following error popup:
+
+```text
+Activating extension 'undefined_publisher.calvacljstestbed' failed: Namespace "goog.debug.Error" already declared..
+```
+
+and in the debug console we get this error:
+
+```text
+SHADOW import error /Users/brandon/development/calvacljstestbed/lib/js/cljs-runtime/shadow.js.shim.module$shadow_cljs$calva_foo.js
+```
+
+At this point we removed the changes for trying the `:npm-module` target.
