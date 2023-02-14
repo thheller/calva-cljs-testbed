@@ -6,7 +6,8 @@
                 :extension
                 {:target :node-library
                  :js-options {:js-provider :shadow
-                              ;; TODO: Test if this is necessary
+                              ;; Not setting this to true results in the following error during build time:
+                              ;; The required JS dependency "https" is not available, it was required by "node_modules/ws/lib/websocket.js".
                               :keep-native-requires true
                               ;; TODO: Test if this is necessary
                               :keep-as-require #{"vscode"}}
