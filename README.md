@@ -250,3 +250,6 @@ goog.forwardDeclare("XMLHttpRequest");
 All the code in that file is wrapped in a function that is immediately invoked, so it seems that the `goog.forwardDeclare` call is not at file scope, but that probably isn't the real problem here.
 
 If shadow-cljs is building the cljs-lib code, then it should be able to later compile the TS code that imports it, so maybe there's something we need to change with the way shadow-cljs builds the cljs-lib code, or there's something we need to change in the `:extension` build in `shadow-cljs.edn` to make shadow-cljs bypass compiling the cljs-lib code, which seems like a redundant step anyway.
+
+At this point, let's upgrade the shadow-cljs version to `^2.20.20` and see if that helps... Nope, same error. Let's keep it at this currently latest version, though.
+
