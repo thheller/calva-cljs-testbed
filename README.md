@@ -8,6 +8,7 @@
   - [Importing the cljs-lib Code in `foo.ts`](#importing-the-cljs-lib-code-in-foots)
 - [Using the :npm-module Target for the calva-lib Build](#using-the-npm-module-target-for-the-calva-lib-build)
 - [Removing the :js-options From the :extension Build](#removing-the-js-options-from-the-extension-build)
+- [Using a Single shadow-cljs Build with :npm-module as the Target](#using-a-single-shadow-cljs-build-with-npm-module-as-the-target)
 
 
 This repo serves as a testbed for getting Calva into a state in which the extension is built with shadow-cljs, so that hot reloading of the TypeScript works and so that we can start porting the extension to ClojureScript incrementally.
@@ -307,3 +308,31 @@ Activating extension 'undefined_publisher.calvacljstestbed' failed: No protocol 
 ```
 
 At this point we removed the changes for removing the `:js-options` from the `:extension` build.
+
+## Using a Single shadow-cljs Build with :npm-module as the Target
+
+Let's update the shadow-cljs.edn file to use a single build with the `:npm-module` target:
+
+```edn
+{:deps true
+ :builds       {:calva-lib
+                {:target    :node-library
+                 :exports   {:testFunction calva.foo/test-function}
+                 :output-to "src/cljs-lib/out/cljs-lib.js"}
+                :extension
+                {:target :npm-module
+                 :output-dir "node_modules/shadow-cljs"
+                 :entries [calva-cljs.extension
+                           calva.foo]
+                 :devtools {:before-load-async calva-cljs.extension/before-load-async
+                            :after-load calva-cljs.extension/after-load}}}}
+```
+
+and set `main` property in `package.json` to `"./node_modules/shadow-cljs/calva_cljs.extension.js"`, and comment out the import of the cljs-lib in `foo.ts`.
+
+If we run `npm run watch-ts` then run the shadow-compilation, then run the extension host, then run the "Hello World" command, it work, but trying to load `extension.cljs` in the repl fails with the following warning popup in the extension host:
+
+```text
+;; TODO: Fill this in
+```
+
