@@ -7,6 +7,7 @@
   - [Importing Compiled `foo.ts` in the :extension Build CLJS](#importing-compiled-foots-in-the-extension-build-cljs)
   - [Importing the cljs-lib Code in `foo.ts`](#importing-the-cljs-lib-code-in-foots)
 - [Using the :npm-module Target for the calva-lib Build](#using-the-npm-module-target-for-the-calva-lib-build)
+- [Removing the :js-options From the :extension Build](#removing-the-js-options-from-the-extension-build)
 
 
 This repo serves as a testbed for getting Calva into a state in which the extension is built with shadow-cljs, so that hot reloading of the TypeScript works and so that we can start porting the extension to ClojureScript incrementally.
@@ -296,3 +297,13 @@ SHADOW import error /Users/brandon/development/calvacljstestbed/lib/js/cljs-runt
 ```
 
 At this point we removed the changes for trying the `:npm-module` target.
+
+## Removing the :js-options From the :extension Build
+
+If we remove the `:js-options` from the `:extension` build, then the `:extension` build succeeds, but after we start the extension host and run the "Hello World" command, we get the folloiwing error popup:
+
+```text
+Activating extension 'undefined_publisher.calvacljstestbed' failed: No protocol method ISwap.-swap! defined for type cljs.core/Atom: [object Object].
+```
+
+At this point we removed the changes for removing the `:js-options` from the `:extension` build.
