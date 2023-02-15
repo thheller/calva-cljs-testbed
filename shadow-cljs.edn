@@ -4,18 +4,10 @@
                  :exports   {:testFunction calva.foo/test-function}
                  :output-to "src/cljs-lib/out/cljs-lib.js"}
                 :extension
-                {:target :node-library
-                 :js-options {:js-provider :shadow
-                              ;; Not setting this to true results in the following error during build time:
-                              ;; The required JS dependency "https" is not available, it was required by "node_modules/ws/lib/websocket.js".
-                              :keep-native-requires true
-                              ;; TODO: Test if this is necessary
-                              :keep-as-require #{"vscode"}}
-                 :compiler-options {:infer-externs :auto}
-                 :exports {:activate calva-cljs.extension/activate
-                           :deactivate calva-cljs.extension/deactivate}
-                 :output-dir "lib/js"
-                 :output-to "lib/main.js"
+                {:target :npm-module
+                 :output-dir "node_modules/shadow-cljs"
+                 :entries [calva-cljs.extension
+                           calva.foo]
                  :devtools {:before-load-async calva-cljs.extension/before-load-async
                             :after-load calva-cljs.extension/after-load}}}}
 

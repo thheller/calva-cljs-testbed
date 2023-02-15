@@ -12,7 +12,7 @@
   "activationEvents": [
     "calvacljstestbed.helloWorld"
   ],
-  "main": "./lib/main.js",
+  "main": "./node_modules/shadow-cljs/calva_cljs.extension.js",
   "contributes": {
     "commands": [
       {
