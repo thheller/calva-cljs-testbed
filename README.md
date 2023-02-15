@@ -300,7 +300,7 @@ At this point we removed the changes for trying the `:npm-module` target.
 
 ## Removing the :js-options From the :extension Build
 
-If we remove the `:js-options` from the `:extension` build, then the `:extension` build succeeds, but after we start the extension host and run the "Hello World" command, we get the folloiwing error popup:
+If we remove the `:js-options` from the `:extension` build, then the `:extension` build succeeds, but after we start the extension host and run the "Hello World" command, we get the following error popup:
 
 ```text
 Activating extension 'undefined_publisher.calvacljstestbed' failed: No protocol method ISwap.-swap! defined for type cljs.core/Atom: [object Object].
