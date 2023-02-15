@@ -334,3 +334,7 @@ If we run `npm run watch-ts` then run the shadow-compilation, then run the exten
 
 This was a bug in Calva and was fixed in 2.0.332. The following steps below this were taken using 2.0.332 or later.
 
+Now when we try to load a file with the extension host running, after calling the "Hello World" command, we don't see a warning popup, but shadow-cljs tells us "No available JS runtime." Maybe the `:npm-module` target can't be used to connect to a runtime? The docs [here](https://shadow-cljs.github.io/docs/UsersGuide.html#missing-js-runtime) don't mention `:npm-module`.
+
+Even when we add `^:export` metdata to the `activate` and `deactivate` functions, we still get the "No available JS runtime" message.
+
