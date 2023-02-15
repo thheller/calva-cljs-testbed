@@ -9,6 +9,7 @@
 - [Using the :npm-module Target for the calva-lib Build](#using-the-npm-module-target-for-the-calva-lib-build)
 - [Removing the :js-options From the :extension Build](#removing-the-js-options-from-the-extension-build)
 - [Using a Single shadow-cljs Build with :npm-module as the Target](#using-a-single-shadow-cljs-build-with-npm-module-as-the-target)
+- [Using a single shadow-cljs build with :node-library as the Target](#using-a-single-shadow-cljs-build-with-node-library-as-the-target)
 
 
 This repo serves as a testbed for getting Calva into a state in which the extension is built with shadow-cljs, so that hot reloading of the TypeScript works and so that we can start porting the extension to ClojureScript incrementally.
@@ -338,3 +339,43 @@ Now when we try to load a file with the extension host running, after calling th
 
 Even when we add `^:export` metdata to the `activate` and `deactivate` functions, we still get the "No available JS runtime" message.
 
+## Using a single shadow-cljs build with :node-library as the Target
+
+If we update the shadow-cljs `:extension` build to look like:
+
+```edn
+                {:target :node-library
+                 :exports {:activate calva-cljs.extension/activate
+                           :deactivate calva-cljs.extension/deactivate
+                           :testFunction calva.foo/test-function}
+                 :output-dir "src/cljs-lib/out/js"
+                 :output-to "src/cljs-lib/out/main.js"
+                 :devtools {:before-load-async calva-cljs.extension/before-load-async
+                            :after-load calva-cljs.extension/after-load}}
+```
+
+and we set the `main` property in `package.json` to `"src/cljs-lib/out/main.js"`, and we make the import of the cljs-lib in `foo.ts` look like `const cljsLib = require("cljs-lib")`, then the extension works, but if we try to call `cljsLibTestFunction` from the repl, we get a repl exception:
+
+```text
+:repl/exception!
+; 
+; Execution error (TypeError) at (<cljs repl>:1).
+; module$shadow_js_shim_module$cljs_lib.default.testFunction is not a function
+```
+
+and we get warnings from node:
+
+```text
+(node:66966) Warning: Accessing non-existent property 'toJSON' of module exports inside circular dependency
+(node:66966) Warning: Accessing non-existent property 'Symbol(Symbol.toStringTag)' of module exports inside circular dependency
+(node:66966) Warning: Accessing non-existent property 'splice' of module exports inside circular dependency
+(node:66966) Warning: Accessing non-existent property 'Symbol(nodejs.util.inspect.custom)' of module exports inside circular dependency
+(node:66966) Warning: Accessing non-existent property 'constructor' of module exports inside circular dependency
+(node:66966) Warning: Accessing non-existent property 'Symbol(Symbol.toStringTag)' of module exports inside circular dependency
+(node:66966) Warning: Accessing non-existent property 'Symbol(Symbol.iterator)' of module exports inside circular dependency
+(node:66966) Warning: Accessing non-existent property 'testFunction' of module exports inside circular dependency
+```
+
+If we log the `cljsLib` object, we see `{}`.
+
+It doesn't seem like this will work due to the circular dependency.
