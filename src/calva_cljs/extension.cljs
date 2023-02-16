@@ -4,6 +4,7 @@
 
 (comment
   (.. foo (hello))
+  (.. foo (cljsLibTestFunction))
   :rcf)
 
 (defonce current-context (atom nil))

@@ -24,6 +24,7 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile-cljs": "npx shadow-cljs compile :calva-lib",
+    "release-calva-lib": "npx shadow-cljs release :calva-lib",
     "watch-ts": "npx tsc --watch --project ./tsconfig.json",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",

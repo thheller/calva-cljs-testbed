@@ -1,8 +1,8 @@
 {:deps true
  :builds       {:calva-lib
-                {:target    :npm-module
-                 :entries [calva.foo]
-                 :output-dir "node_modules/shadow-cljs"}
+                {:target    :node-library
+                 :exports   {:testFunction calva.foo/test-function}
+                 :output-to "src/cljs-lib/out/cljs-lib.js"}
                 :extension
                 {:target :node-library
                  :exports {:activate calva-cljs.extension/activate

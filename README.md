@@ -10,6 +10,7 @@
 - [Removing the :js-options From the :extension Build](#removing-the-js-options-from-the-extension-build)
 - [Using a Single shadow-cljs Build with :npm-module as the Target](#using-a-single-shadow-cljs-build-with-npm-module-as-the-target)
 - [Using a single shadow-cljs build with :node-library as the Target](#using-a-single-shadow-cljs-build-with-node-library-as-the-target)
+- [Using a release build with :node-library as the target for the calva-lib build (working arrangement with a caveat)](#using-a-release-build-with-node-library-as-the-target-for-the-calva-lib-build-working-arrangement-with-a-caveat)
 
 
 This repo serves as a testbed for getting Calva into a state in which the extension is built with shadow-cljs, so that hot reloading of the TypeScript works and so that we can start porting the extension to ClojureScript incrementally.
@@ -385,3 +386,27 @@ and we get warnings from node:
 If we log the `cljsLib` object, we see `{}`.
 
 It doesn't seem like this will work due to the circular dependency.
+
+## Using a release build with :node-library as the target for the calva-lib build (working arrangement with a caveat)
+
+If we update `shadow-cljs.edn` to look like:
+
+```edn
+{:deps true
+ :builds       {:calva-lib
+                {:target    :node-library
+                 :exports   {:testFunction calva.foo/test-function}
+                 :output-to "src/cljs-lib/out/cljs-lib.js"}
+                :extension
+                {:target :node-library
+                 :exports {:activate calva-cljs.extension/activate
+                           :deactivate calva-cljs.extension/deactivate}
+                 :output-dir "lib/js"
+                 :output-to "lib/main.js"
+                 :devtools {:before-load-async calva-cljs.extension/before-load-async
+                            :after-load calva-cljs.extension/after-load}}}}
+```
+
+And we make the import of the cljs-lib in `foo.ts` look like `const cljsLib = require("cljs-lib")`, then the extension works, the "Hello World" command works, we can connect the repl to the JS runtime, and we can call `cljsLibTestFunction` from the repl and it works.
+
+The caveat with this method is that we won't have hot reloading (or any reloading) of the cljs-lib code.
