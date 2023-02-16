@@ -1,6 +1,6 @@
 import vscode from "vscode";
 import os from "os";
-//const cljsLib = require("../lib/main.js");
+const cljsLib = require("shadow-cljs/calva.foo");
 
 export function hello() {
   return "hello";

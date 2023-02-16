@@ -339,6 +339,12 @@ Now when we try to load a file with the extension host running, after calling th
 
 Even when we add `^:export` metdata to the `activate` and `deactivate` functions, we still get the "No available JS runtime" message.
 
+Update: This was later tried again and the TS `import` statement was changed to a `require` statement, but when we tried to load `extension.cljs` in the repl, we got the following error:
+
+```text
+Namespace "goog.debug.Error" already declared.
+```
+
 ## Using a single shadow-cljs build with :node-library as the Target
 
 If we update the shadow-cljs `:extension` build to look like:

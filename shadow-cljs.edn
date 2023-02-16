@@ -1,13 +1,14 @@
 {:deps true
  :builds       {:calva-lib
-                {:target    :node-library
-                 :exports   {:testFunction calva.foo/test-function}
-                 :output-to "src/cljs-lib/out/cljs-lib.js"}
+                {:target    :npm-module
+                 :entries [calva.foo]
+                 :output-dir "node_modules/shadow-cljs"}
                 :extension
-                {:target :npm-module
-                 :output-dir "node_modules/shadow-cljs"
-                 :entries [calva-cljs.extension
-                           calva.foo]
+                {:target :node-library
+                 :exports {:activate calva-cljs.extension/activate
+                           :deactivate calva-cljs.extension/deactivate}
+                 :output-dir "lib/js"
+                 :output-to "lib/main.js"
                  :devtools {:before-load-async calva-cljs.extension/before-load-async
                             :after-load calva-cljs.extension/after-load}}}}
 
