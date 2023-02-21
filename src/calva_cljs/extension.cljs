@@ -1,6 +1,7 @@
 (ns calva-cljs.extension
-  (:require ["vscode" :as vscode :refer [window]]
-            ["/foo.js" :as foo]))
+  (:require
+   ["vscode" :as vscode :refer [window]]
+   ["/foo.js" :as foo]))
 
 (comment
   (.. foo (hello))
@@ -31,6 +32,7 @@
 
 (defn activate
   [^js context]
+  (js/console.log "Activating Calva CLJS Testbed")
   (reset! current-context context)
   (register-command! "calvacljstestbed.helloWorld" say-hello)
   (prn "Calva CLJS Testbed activated"))
@@ -41,10 +43,12 @@
   (prn "Calva CLJS Testbed deactivated"))
 
 (defn before-load-async [done]
+  (prn "Running before-load-async")
   (deactivate)
   (done))
 
 (defn after-load []
+  (prn "Running after-load")
   (activate @current-context)
   (prn "Calva CLJS Testbed reloaded"))
 

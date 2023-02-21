@@ -12,7 +12,7 @@
   "activationEvents": [
     "calvacljstestbed.helloWorld"
   ],
-  "main": "lib/main.js",
+  "main": "./index.js",
   "contributes": {
     "commands": [
       {

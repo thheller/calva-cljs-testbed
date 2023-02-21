@@ -11,6 +11,7 @@
 - [Using a Single shadow-cljs Build with :npm-module as the Target](#using-a-single-shadow-cljs-build-with-npm-module-as-the-target)
 - [Using a single shadow-cljs build with :node-library as the Target](#using-a-single-shadow-cljs-build-with-node-library-as-the-target)
 - [Using a release build with :node-library as the target for the calva-lib build (working arrangement with a caveat)](#using-a-release-build-with-node-library-as-the-target-for-the-calva-lib-build-working-arrangement-with-a-caveat)
+- [Back to using a single shadow-cljs build with :npm-module as the target (using advice from Thomas Heller)](#back-to-using-a-single-shadow-cljs-build-with-npm-module-as-the-target-using-advice-from-thomas-heller)
 
 
 This repo serves as a testbed for getting Calva into a state in which the extension is built with shadow-cljs, so that hot reloading of the TypeScript works and so that we can start porting the extension to ClojureScript incrementally.
@@ -406,3 +407,41 @@ If we update `shadow-cljs.edn` to look like:
 And we make the import of the cljs-lib in `foo.ts` look like `const cljsLib = require("cljs-lib")`, then the extension works, the "Hello World" command works, we can connect the repl to the JS runtime, and we can call `cljsLibTestFunction` from the repl and it works.
 
 The caveat with this method is that we won't have hot reloading (or any reloading) of the cljs-lib code.
+
+## Back to using a single shadow-cljs build with :npm-module as the target (using advice from Thomas Heller)
+
+We updated the shadow-cljs.edn file to look like:
+
+```edn
+{:deps true
+ :builds       {:extension
+                {:target :npm-module
+                 :runtime :node
+                 :output-dir "node_modules/shadow-cljs"
+                 :entries [calva-cljs.extension
+                           calva.foo]
+                 :devtools {:before-load-async calva-cljs.extension/before-load-async
+                            :after-load calva-cljs.extension/after-load}}}}
+```
+
+We added an `index.js` file for the extension entry point that looks like:
+
+```js
+console.log("Loading shadow devtools for node client");
+require("shadow-cljs/shadow.cljs.devtools.client.node");
+console.log("Loading extension entry point");
+const extension = require("shadow-cljs/calva_cljs.extension");
+
+exports.activate = extension.activate;
+exports.deactivate = extension.deactivate;
+```
+
+We set the `main` property in `package.json` to `"./index.js"`.
+
+When we run the extension and run the `Hello World` command, it works. However, when we save the `extension.cljs` file, we get the following error in the debug console (though, the shadow-cljs compilation succeeds):
+
+```text
+JS reload failed ReferenceError: SHADOW_IMPORT is not defined
+```
+
+The advice used in this section and a discussion about the error can be found in [this Slack thread](https://clojurians.slack.com/archives/C6N245JGG/p1676500815612249).
