@@ -445,3 +445,16 @@ JS reload failed ReferenceError: SHADOW_IMPORT is not defined
 ```
 
 The advice used in this section and a discussion about the error can be found in [this Slack thread](https://clojurians.slack.com/archives/C6N245JGG/p1676500815612249).
+
+Thomas Heller suggested copying the contents of the `node_bootstrap.js` file from the shadow-cljs source into the entry js file. After doing that, the above-mentioned procedure leads to an error that `SHADOW_IMPORT_PATH` is not defined. It looks like the `shadow.build.node/flush-unoptimized` adds a definition for that variable, but when we tried to set it to `__dirname + "/node_modules/shadow-cljs"`, which seemed correct for our setup, another error occurred:
+
+```text
+SHADOW import error /Users/brandon/development/calvacljstestbed/node_modules/shadow-cljs/calva_cljs.extension.js
+extensionHostProcess.js:100
+JS reload failed Error: Cannot find module './cljs_env'
+Require stack:
+- /Users/brandon/development/calvacljstestbed/index.js
+...
+```
+
+That file/module is defined where at the relative path mentioned, so it's not clear what to do next.
