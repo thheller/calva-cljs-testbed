@@ -12,7 +12,7 @@
   "activationEvents": [
     "calvacljstestbed.helloWorld"
   ],
-  "main": "./public/js/main.bundle.js",
+  "main": "./lib/main.js",
   "contributes": {
     "commands": [
       {
@@ -29,7 +29,7 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
-    "clean": "rimraf ./out && rimraf ./tsconfig.tsbuildinfo && rimraf ./cljs-out && rimraf ./lib",
+    "clean": "rimraf ./out ./tsconfig.tsbuildinfo ./cljs-out ./lib ./src/cljs-lib/out",
     "bundle": "esbuild public/js/main.js --bundle --platform=node --packages=external --outfile=public/js/main.bundle.js"
   },
   "devDependencies": {
