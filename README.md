@@ -317,11 +317,7 @@ Let's update the shadow-cljs.edn file to use a single build with the `:npm-modul
 
 ```edn
 {:deps true
- :builds       {:calva-lib
-                {:target    :node-library
-                 :exports   {:testFunction calva.foo/test-function}
-                 :output-to "src/cljs-lib/out/cljs-lib.js"}
-                :extension
+ :builds       {:extension
                 {:target :npm-module
                  :output-dir "node_modules/shadow-cljs"
                  :entries [calva-cljs.extension
