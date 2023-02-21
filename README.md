@@ -387,7 +387,7 @@ It doesn't seem like this will work due to the circular dependency.
 
 ## Using a release build with :node-library as the target for the calva-lib build (working arrangement with a caveat)
 
-If we update `shadow-cljs.edn` to look like:
+We update `shadow-cljs.edn` to look like:
 
 ```edn
 {:deps true
@@ -405,7 +405,9 @@ If we update `shadow-cljs.edn` to look like:
                             :after-load calva-cljs.extension/after-load}}}}
 ```
 
-And we make the import of the cljs-lib in `foo.ts` look like `const cljsLib = require("cljs-lib")`, then the extension works, the "Hello World" command works, we can connect the repl to the JS runtime, and we can call `cljsLibTestFunction` from the repl and it works.
+We set the `main` property in `package.json` to `"lib/main.js"`.
+
+We make the import of the cljs-lib in `foo.ts` look like `const cljsLib = require("cljs-lib")`, then the extension works, the "Hello World" command works, we can connect the repl to the JS runtime, and we can call `cljsLibTestFunction` from the repl and it works.
 
 The caveat with this method is that we won't have hot reloading (or any reloading) of the cljs-lib code.
 
