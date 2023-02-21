@@ -10,7 +10,7 @@
 - [Removing the :js-options From the :extension Build](#removing-the-js-options-from-the-extension-build)
 - [Using a Single shadow-cljs Build with :npm-module as the Target](#using-a-single-shadow-cljs-build-with-npm-module-as-the-target)
 - [Using a single shadow-cljs build with :node-library as the Target](#using-a-single-shadow-cljs-build-with-node-library-as-the-target)
-- [Using a release build with :node-library as the target for the calva-lib build (working arrangement with a caveat)](#using-a-release-build-with-node-library-as-the-target-for-the-calva-lib-build-working-arrangement-with-a-caveat)
+- [Using two :node-library builds](#using-two-node-library-builds)
 - [Back to using a single shadow-cljs build with :npm-module as the target (using advice from Thomas Heller)](#back-to-using-a-single-shadow-cljs-build-with-npm-module-as-the-target-using-advice-from-thomas-heller)
 - [Using :esm build target](#using-esm-build-target)
 
@@ -385,7 +385,7 @@ If we log the `cljsLib` object, we see `{}`.
 
 It doesn't seem like this will work due to the circular dependency.
 
-## Using a release build with :node-library as the target for the calva-lib build (working arrangement with a caveat)
+## Using two :node-library builds
 
 We update `shadow-cljs.edn` to look like:
 
@@ -407,9 +407,16 @@ We update `shadow-cljs.edn` to look like:
 
 We set the `main` property in `package.json` to `"lib/main.js"`.
 
-We make the import of the cljs-lib in `foo.ts` look like `const cljsLib = require("cljs-lib")`, then the extension works, the "Hello World" command works, we can connect the repl to the JS runtime, and we can call `cljsLibTestFunction` from the repl and it works.
+We make the import of the cljs-lib in `foo.ts` look like `const cljsLib = require("cljs-lib")`.
 
-The caveat with this method is that we won't have hot reloading (or any reloading) of the cljs-lib code.
+When we run the extension and then run the `Hello World` command, we get the following error in a popup:
+
+```text
+Activating extension 'undefined_publisher.calvacljstestbed' failed: No protocol method ISwap.-swap! defined for type cljs.core/Atom: [object Object].
+```
+
+If we do a release build of the cljs-lib, then start the TS watch, then do a dev build of the extension build, then everything works fine, and we can connect to the runtime with the cljs-lib code and the extension code and develop at the repl for both builds, but hot reloading does not work for the cljs-lib code.
+
 
 ## Back to using a single shadow-cljs build with :npm-module as the target (using advice from Thomas Heller)
 

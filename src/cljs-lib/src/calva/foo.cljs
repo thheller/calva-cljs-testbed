@@ -1,4 +1,9 @@
 (ns calva.foo)
 
-(defn test-function [x]
-  (str "Hello " x))
+(defn test-function []
+  (str "Hello from cljs-lib"))
+
+(comment
+  (test-function)
+  :rcf)
+

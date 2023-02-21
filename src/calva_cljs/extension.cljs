@@ -1,11 +1,13 @@
 (ns calva-cljs.extension
   (:require
    ["vscode" :as vscode :refer [window]]
+   [calva.foo :as calva-foo]
    ["/foo.js" :as foo]))
 
 (comment
   (.. foo (hello))
   (.. foo (cljsLibTestFunction))
+  (calva-foo/test-function)
   :rcf)
 
 (defonce current-context (atom nil))
@@ -21,7 +23,10 @@
         disposables))
 
 (defn say-hello []
-  (.. window (showInformationMessage "Hello world!")))
+  (.. window (showInformationMessage "Hello world...")))
+
+(defn hello-cljs-lib []
+  (.. window (showInformationMessage (.. foo (cljsLibTestFunction)))))
 
 (defn register-command!
   [command-name command-function]
@@ -35,6 +40,7 @@
   (js/console.log "Activating Calva CLJS Testbed")
   (reset! current-context context)
   (register-command! "calvacljstestbed.helloWorld" say-hello)
+  (register-command! "calvacljstestbed.helloCljsLib" hello-cljs-lib)
   (prn "Calva CLJS Testbed activated"))
 
 (defn deactivate

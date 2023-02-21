@@ -18,6 +18,10 @@
       {
         "command": "calvacljstestbed.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "calvacljstestbed.helloCljsLib",
+        "title": "Hello cljs-lib"
       }
     ]
   },

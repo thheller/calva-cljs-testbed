@@ -3,7 +3,7 @@ import os from "os";
 const cljsLib = require("cljs-lib");
 
 export function hello() {
-  return "hello";
+  return "hello...";
 }
 
 export function platform() {
@@ -11,9 +11,11 @@ export function platform() {
 }
 
 export function cljsLibTestFunction() {
-  return cljsLib.testFunction("World");
+  return cljsLib.testFunction();
 }
 
 export function showMessage(message: string) {
   void vscode.window.showInformationMessage(message);
 }
+
+// some comment
