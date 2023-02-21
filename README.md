@@ -12,6 +12,7 @@
 - [Using a single shadow-cljs build with :node-library as the Target](#using-a-single-shadow-cljs-build-with-node-library-as-the-target)
 - [Using a release build with :node-library as the target for the calva-lib build (working arrangement with a caveat)](#using-a-release-build-with-node-library-as-the-target-for-the-calva-lib-build-working-arrangement-with-a-caveat)
 - [Back to using a single shadow-cljs build with :npm-module as the target (using advice from Thomas Heller)](#back-to-using-a-single-shadow-cljs-build-with-npm-module-as-the-target-using-advice-from-thomas-heller)
+- [Using :esm build target](#using-esm-build-target)
 
 
 This repo serves as a testbed for getting Calva into a state in which the extension is built with shadow-cljs, so that hot reloading of the TypeScript works and so that we can start porting the extension to ClojureScript incrementally.
@@ -458,3 +459,32 @@ Require stack:
 ```
 
 That file/module is defined where at the relative path mentioned, so it's not clear what to do next.
+
+## Using :esm build target
+
+We changed shadow-cljs.edn to look like:
+
+```edn
+{:deps true
+ :builds       {:extension
+                {:target :esm
+                 :runtime :node
+                 :js-options {:js-provider :shadow
+                              :keep-native-requires true
+                              :keep-as-require #{"vscode"}}
+                 :output-dir "public/js"
+                 :modules {:main {:exports {activate calva-cljs.extension/activate
+                                            deactivate calva-cljs.extension/deactivate}}}
+                 :devtools {:before-load-async calva-cljs.extension/before-load-async
+                            :after-load calva-cljs.extension/after-load}}}}
+```
+
+The output for that build can't be used as it is by VS Code, so we installed esbuild as a dev dep and ran the following after the shadow-cljs build completed:
+
+```bash
+npx esbuild public/js/main.js --bundle --platform=node --packages=external --outfile=public/js/main.bundle.js
+```
+
+We changed the `main` property in `package.json` to `"./public/js/main.bundle.js"`.
+
+This seems to work - the `Hello World` command runs fine, but we cannot connect to the JS runtime from the repl.

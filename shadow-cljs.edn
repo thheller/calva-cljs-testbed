@@ -1,9 +1,12 @@
 {:deps true
  :builds       {:extension
-                {:target :npm-module
+                {:target :esm
                  :runtime :node
-                 :output-dir "node_modules/shadow-cljs"
-                 :entries [calva-cljs.extension
-                           calva.foo]
+                 :js-options {:js-provider :import
+                              :keep-native-requires true
+                              :keep-as-require #{"vscode"}}
+                 :output-dir "public/js"
+                 :modules {:main {:exports {activate calva-cljs.extension/activate
+                                            deactivate calva-cljs.extension/deactivate}}}
                  :devtools {:before-load-async calva-cljs.extension/before-load-async
                             :after-load calva-cljs.extension/after-load}}}}

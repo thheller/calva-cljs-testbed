@@ -12,3 +12,5 @@ tsconfig.tsbuildinfo
 lib
 .calva/output-window
 .lsp/.cache
+
+public
