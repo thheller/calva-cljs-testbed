@@ -470,7 +470,7 @@ Require stack:
 
 That file/module is defined at the relative path mentioned, so it's not clear what to do next.
 
-Note: Hot reloading does not work at all with this solution, at least not when using compiled cljs directly for the entry point, and not a JS file (need to test with the JD entry point again).
+Note: Hot reloading does not work at all with this solution, at least not when using compiled cljs directly for the entry point, and not a JS file (need to test with the JS entry point again).
 
 ## Using :esm build target
 
