@@ -468,7 +468,7 @@ Require stack:
 ...
 ```
 
-That file/module is defined where at the relative path mentioned, so it's not clear what to do next.
+That file/module is defined at the relative path mentioned, so it's not clear what to do next.
 
 ## Using :esm build target
 
