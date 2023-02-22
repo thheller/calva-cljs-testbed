@@ -417,6 +417,7 @@ Activating extension 'undefined_publisher.calvacljstestbed' failed: No protocol 
 
 If we do a release build of the cljs-lib, then start the TS watch, then do a dev build of the extension build, then everything works fine, and we can connect to the runtime with the cljs-lib code and the extension code and develop at the repl for both builds, but hot reloading does not work for the cljs-lib code.
 
+According to Thomas Heller, loading two :node-library builds in development mode is not supported. [In this Slack thread](https://clojurians.slack.com/archives/C6N245JGG/p1528782322000056), he recommends using a single :npm-module build.
 
 ## Back to using a single shadow-cljs build with :npm-module as the target (using advice from Thomas Heller)
 
