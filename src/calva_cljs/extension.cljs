@@ -23,10 +23,13 @@
         disposables))
 
 (defn say-hello []
-  (.. window (showInformationMessage "Hello world...")))
+  (.. window (showInformationMessage "Hello world")))
 
 (defn hello-cljs-lib []
   (.. window (showInformationMessage (.. foo (cljsLibTestFunction)))))
+
+(defn hello-typescript []
+  (.. window (showInformationMessage (.. foo (hello)))))
 
 (defn register-command!
   [command-name command-function]
@@ -40,6 +43,7 @@
   (js/console.log "Activating Calva CLJS Testbed")
   (reset! current-context context)
   (register-command! "calvacljstestbed.helloWorld" say-hello)
+  (register-command! "calvacljstestbed.helloTypeScript" hello-typescript)
   (register-command! "calvacljstestbed.helloCljsLib" hello-cljs-lib)
   (prn "Calva CLJS Testbed activated"))
 

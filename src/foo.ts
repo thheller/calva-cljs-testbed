@@ -1,9 +1,9 @@
 import vscode from "vscode";
 import os from "os";
-const cljsLib = require("cljs-lib");
+import cljsLib from "cljs-lib";
 
 export function hello() {
-  return "hello...";
+  return "Hello from TypeScript";
 }
 
 export function platform() {
@@ -18,4 +18,4 @@ export function showMessage(message: string) {
   void vscode.window.showInformationMessage(message);
 }
 
-// some comment
+//.. some comment

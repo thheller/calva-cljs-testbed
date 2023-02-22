@@ -22,6 +22,10 @@
       {
         "command": "calvacljstestbed.helloCljsLib",
         "title": "Hello cljs-lib"
+      },
+      {
+        "command": "calvacljstestbed.helloTypeScript",
+        "title": "Hello TypeScript"
       }
     ]
   },
