@@ -2,11 +2,11 @@
   (:require
    ["vscode" :as vscode :refer [window]]
    [calva.foo :as calva-foo]
-   ["/calva/foo.js" :as foo]))
+   ["/calva/bar.js" :as bar]))
 
 (comment
-  (.. foo (hello))
-  (.. foo (cljsLibTestFunction))
+  (bar/hello)
+  (bar/cljsLibTestFunction)
   (calva-foo/test-function)
   :rcf)
 
@@ -26,10 +26,10 @@
   (.. window (showInformationMessage "Hello world")))
 
 (defn hello-cljs-lib []
-  (.. window (showInformationMessage (.. foo (cljsLibTestFunction)))))
+  (.. window (showInformationMessage (bar/cljsLibTestFunction))))
 
 (defn hello-typescript []
-  (.. window (showInformationMessage (.. foo (hello)))))
+  (.. window (showInformationMessage (bar/hello))))
 
 (defn register-command!
   [command-name command-function]

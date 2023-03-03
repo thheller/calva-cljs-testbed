@@ -12,7 +12,7 @@
   "activationEvents": [
     "calvacljstestbed.helloWorld"
   ],
-  "main": "./index.js",
+  "main": "./lib/ext.js",
   "contributes": {
     "commands": [
       {
@@ -31,8 +31,8 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile-cljs": "npx shadow-cljs compile :calva-lib",
-    "release-calva-lib": "npx shadow-cljs release :calva-lib",
+    "compile-cljs": "npx shadow-cljs watch ext",
+    "release-cljs": "npx shadow-cljs release ext",
     "watch-ts": "npx tsc --watch --project ./tsconfig.json",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",

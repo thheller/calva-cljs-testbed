@@ -1,5 +1,7 @@
 {:deps true
  :builds
- {:ext {:target :npm-module
-        :runtime :node
-        :output-dir "lib"}}}
+ {:ext {:target :node-library
+        :exports {:activate calva-cljs.extension/activate
+                  :deactivate calva-cljs.extension/deactivate}
+        :output-dir "lib/ext"
+        :output-to "lib/ext.js"}}}
