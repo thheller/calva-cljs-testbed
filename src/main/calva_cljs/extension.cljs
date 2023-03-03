@@ -2,7 +2,7 @@
   (:require
    ["vscode" :as vscode :refer [window]]
    [calva.foo :as calva-foo]
-   ["/foo.js" :as foo]))
+   ["/calva/foo.js" :as foo]))
 
 (comment
   (.. foo (hello))

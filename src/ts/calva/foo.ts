@@ -1,6 +1,6 @@
 import vscode from "vscode";
 import os from "os";
-import cljsLib from "cljs-lib";
+import cljsLib from "goog:calva.foo";
 
 export function hello() {
   return "Hello from TypeScript";
@@ -11,7 +11,7 @@ export function platform() {
 }
 
 export function cljsLibTestFunction() {
-  return cljsLib.testFunction();
+  return cljsLib.test_function();
 }
 
 export function showMessage(message: string) {

@@ -14,3 +14,7 @@ lib
 .lsp/.cache
 
 public
+
+src/gen
+*.iml
+.idea/

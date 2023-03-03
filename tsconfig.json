@@ -19,9 +19,9 @@
     "moduleResolution": "node16",
     "allowSyntheticDefaultImports": true,
     "target": "es6",
-    "outDir": "out",
+    "outDir": "src/gen",
     "lib": ["es2020", "dom"],
-    "rootDir": "src",
+    "rootDir": "src/ts",
     "inlineSourceMap": true
   },
   "exclude": ["node_modules", "src/webview", "src/webview.ts", ".vscode-test"]
