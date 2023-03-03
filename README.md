@@ -330,7 +330,7 @@ Let's update the shadow-cljs.edn file to use a single build with the `:npm-modul
 
 and set `main` property in `package.json` to `"./node_modules/shadow-cljs/calva_cljs.extension.js"`, and comment out the import of the cljs-lib in `foo.ts`.
 
-If we run `npm run watch-ts` then run the shadow-compilation, then run the extension host, then run the "Hello World" command, it work, but trying to load `extension.cljs` in the repl fails with a warning popup in the extension host mentioning `id` cannot be accessed on `undefined`.
+If we run `npm run watch-ts` then run the shadow-compilation, then run the extension host, then run the "Hello World" command, it works, but trying to load `extension.cljs` in the repl fails with a warning popup in the extension host mentioning `id` cannot be accessed on `undefined`.
 
 This was a bug in Calva and was fixed in 2.0.332. The following steps below this were taken using 2.0.332 or later.
 
