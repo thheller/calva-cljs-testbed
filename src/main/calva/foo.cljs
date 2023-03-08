@@ -1,6 +1,6 @@
 (ns calva.foo)
 
-(defn test-function []
+(defn ^:export test-function []
   (str "Hello from cljs-lib"))
 
 (comment

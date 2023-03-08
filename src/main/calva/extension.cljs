@@ -1,12 +1,13 @@
-(ns calva-cljs.extension
+(ns calva.extension
   (:require
    ["vscode" :as vscode :refer [window]]
-   [calva.foo :as calva-foo]
-   ["/calva/bar.js" :as bar]))
+   [calva.foo :as calva-foo]))
+
+(def bar (js/require "../bar.js"))
 
 (comment
-  (bar/hello)
-  (bar/cljsLibTestFunction)
+  (.hello bar)
+  (.cljsLibTestFunction bar)
   (calva-foo/test-function)
   :rcf)
 
@@ -26,10 +27,10 @@
   (.. window (showInformationMessage "Hello world")))
 
 (defn hello-cljs-lib []
-  (.. window (showInformationMessage (bar/cljsLibTestFunction))))
+  (.. window (showInformationMessage (.cljsLibTestFunction bar))))
 
 (defn hello-typescript []
-  (.. window (showInformationMessage (bar/hello))))
+  (.. window (showInformationMessage (.hello bar))))
 
 (defn register-command!
   [command-name command-function]
@@ -38,7 +39,7 @@
                                          command-function))]
     (add-disposable! disposable)))
 
-(defn activate
+(defn ^:export activate
   [^js context]
   (js/console.log "Activating Calva CLJS Testbed")
   (reset! current-context context)
@@ -47,7 +48,7 @@
   (register-command! "calvacljstestbed.helloCljsLib" hello-cljs-lib)
   (prn "Calva CLJS Testbed activated"))
 
-(defn deactivate
+(defn ^:export deactivate
   []
   (dispose-all! @disposables)
   (prn "Calva CLJS Testbed deactivated"))

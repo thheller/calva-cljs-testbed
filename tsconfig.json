@@ -15,14 +15,14 @@
     // "noUnusedParameters": true,            /* Report errors on unused parameters. */
     // "noImplicitReturns": true,             /* Report error when not all code paths in function return a value. */
     // "noFallthroughCasesInSwitch": true,    /* Report errors for fallthrough cases in switch statement. */
-    "module": "es6",
+    "module": "commonjs",
     "moduleResolution": "node16",
     "allowSyntheticDefaultImports": true,
     "target": "es6",
-    "outDir": "src/gen",
+    "outDir": "lib",
     "lib": ["es2020", "dom"],
     "rootDir": "src/ts",
     "inlineSourceMap": true
   },
-  "exclude": ["node_modules", "src/webview", "src/webview.ts", ".vscode-test"]
+  "exclude": ["node_modules", "lib/cljs", "src/webview", "src/webview.ts", ".vscode-test"]
 }

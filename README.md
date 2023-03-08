@@ -2,13 +2,13 @@
 
 ## The End Goal
 
-- Run the `Hello World` command, which calls a function in `src/calva_cljs/extension.cljs`, which in turn calls a function in `src/foo.ts`, which in turn calls a function in `src/cljs-lib/src/calva/foo.cljs`.
+- Run the `Hello World` command, which calls a function in `src/main/calva/extension.cljs`, which in turn calls a function in in `src/ts/bar.ts`, output to `lib/bar.js`, which in turn calls a function from the `calva.foo` namespace, via the generated `lib/cljs/calva.foo.js`.
 - Build and run a VSIX and verify that the `Hello World` command, as mentioned above, works.
 
 ## Running the Extension
 
 1. Run `npm install`.
-2. Run `npm run watch-ts`. This must be done before the shadow-cljs watch process so that the compiled TypeScript files are on the classpath and can be imported by the CLJS code in `src/main/calva_cljs`.
+2. Run `npm run watch-ts`.
 3. Run `npx shadow-cljs watch ext` or `npx shadow-cljs release ext`
 4. Open VSCode, open Folder with this project
 4. Hit `F5` to start the extension in a new VS Code window.
@@ -27,14 +27,10 @@ Most of the troubles of previous attempts came from trying to mix two builds, or
 ## Problems
 
 ```
-src/ts/calva/foo.ts:3:21 - error TS2307: Cannot find module 'goog:calva.foo' or its corresponding type declarations.
+src/ts/bar.ts:3:21 - error TS2307: Cannot find module './cljs/calva.foo' or its corresponding type declarations.
 
-3 import cljsLib from "goog:calva.foo";
-                      ~~~~~~~~~~~~~~~~
+3 import cljsLib from "./cljs/calva.foo";
+                      ~~~~~~~~~~~~~~~~~~
 ```
 
-`import from "goog:..."` is the way the closure compiler expects JS files to load Closure namespaces, which CLJS namespaces also are. I do not know how you tell tsc to ignore these.
-
-It seems to work regardless, the files are written to `src/gen` as needed.
-
-TS output is included by shadow-cljs, and passing through `:advanced`. This will very likely not work with the real extension, due to too much JS code without externs. Might need to stick with `:simple`? Or fight with externs, maybe its not actually that many. Have not checkout the real calva ts sources.
+I don't know how to teach tsc about files that only live in its output folder?
