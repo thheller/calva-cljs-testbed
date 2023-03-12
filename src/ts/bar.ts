@@ -1,6 +1,8 @@
 import vscode from "vscode";
 import os from "os";
-import cljsLib from "./cljs/calva.foo";
+import * as cljsLib from "./cljs/calva.foo";
+
+console.log("hello cljsLib", cljsLib);
 
 export function hello() {
   return "Hello from TypeScript";
